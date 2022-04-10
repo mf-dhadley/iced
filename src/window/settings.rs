@@ -27,6 +27,9 @@ pub struct Settings {
     /// Whether the window will always be on top of other windows.
     pub always_on_top: bool,
 
+    /// To display or not to display the cursor.
+    pub visible_cursor: bool,
+
     /// The icon of the window.
     pub icon: Option<Icon>,
 }
@@ -42,6 +45,7 @@ impl Default for Settings {
             decorations: true,
             transparent: false,
             always_on_top: false,
+            visible_cursor: true,
             icon: None,
         }
     }
@@ -58,6 +62,7 @@ impl From<Settings> for iced_winit::settings::Window {
             decorations: settings.decorations,
             transparent: settings.transparent,
             always_on_top: settings.always_on_top,
+            visible_cursor: settings.visible_cursor,
             icon: settings.icon.map(Icon::into),
             platform_specific: Default::default(),
         }

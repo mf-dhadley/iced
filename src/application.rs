@@ -185,6 +185,25 @@ pub trait Application: Sized {
         false
     }
 
+    /// Runs the [`Application`], with the ability to provide additional renderer
+    /// configuration values. This is useful for applications that may need to
+    /// override the default frame buffer configuration attributes used by glutin.
+    ///
+    /// [`Error`]: crate::Error
+    fn run_with_renderer_settings(
+        settings: Settings<Self::Flags>,
+        renderer_settings: crate::renderer::Settings,
+    ) -> crate::Result
+    where
+        Self: 'static,
+    {
+        Ok(crate::runtime::application::run::<
+            Instance<Self>,
+            Self::Executor,
+            crate::renderer::window::Compositor,
+        >(settings.into(), renderer_settings)?)
+    }
+
     /// Runs the [`Application`].
     ///
     /// On native platforms, this method will take control of the current thread
@@ -210,11 +229,7 @@ pub trait Application: Sized {
             ..crate::renderer::Settings::from_env()
         };
 
-        Ok(crate::runtime::application::run::<
-            Instance<Self>,
-            Self::Executor,
-            crate::renderer::window::Compositor,
-        >(settings.into(), renderer_settings)?)
+        Self::run_with_renderer_settings(settings, renderer_settings)
     }
 }
 

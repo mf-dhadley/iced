@@ -73,6 +73,9 @@ pub struct Window {
     /// Whether the window will always be on top of other windows.
     pub always_on_top: bool,
 
+    /// To display or not to display the cursor.
+    pub visible_cursor: bool,
+
     /// The window icon, which is also usually used in the taskbar
     pub icon: Option<winit::window::Icon>,
 
@@ -180,6 +183,7 @@ impl Default for Window {
             decorations: true,
             transparent: false,
             always_on_top: false,
+            visible_cursor: true,
             icon: None,
             platform_specific: Default::default(),
         }

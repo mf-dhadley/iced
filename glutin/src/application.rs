@@ -52,6 +52,7 @@ where
     };
 
     let subscription = application.subscription();
+    let visible_cursor = settings.window.visible_cursor;
 
     let context = {
         let builder = settings.window.into_builder(
@@ -61,9 +62,14 @@ where
             settings.id,
         );
 
+        let (color_format, alpha_format) =
+            C::pixel_format(&compositor_settings);
+
         let opengl_builder = ContextBuilder::new()
             .with_vsync(true)
-            .with_multisampling(C::sample_count(&compositor_settings) as u16);
+            .with_multisampling(C::sample_count(&compositor_settings) as u16)
+            .with_depth_buffer(C::depth_buffer(&compositor_settings))
+            .with_pixel_format(color_format, alpha_format);
 
         let opengles_builder = opengl_builder.clone().with_gl(
             glutin::GlRequest::Specific(glutin::Api::OpenGlEs, (2, 0)),
@@ -94,6 +100,10 @@ where
             context.make_current().expect("Make OpenGL context current")
         }
     };
+
+    if visible_cursor != true {
+        context.window().set_cursor_visible(false);
+    }
 
     #[allow(unsafe_code)]
     let (compositor, renderer) = unsafe {

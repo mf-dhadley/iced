@@ -22,6 +22,17 @@ pub struct Settings {
     /// By default, it is disabled.
     pub text_multithreading: bool,
 
+    /// The amount of bits to use to store depth values.
+    pub depth_bits: u8,
+
+    /// The amount of bits to use to store alpha values.
+    pub alpha_bits: u8,
+
+    /// The amount of bits to use to store color values. Note: this is the sum
+    /// of each `r + g + b` amount. For example. A value of 24 would mean 8 bits
+    /// for each color.
+    pub color_bits: u8,
+
     /// The antialiasing strategy that will be used for triangle primitives.
     ///
     /// By default, it is `None`.
@@ -35,6 +46,10 @@ impl Default for Settings {
             default_text_size: 20,
             text_multithreading: false,
             antialiasing: None,
+
+            color_bits: 24,
+            depth_bits: 24,
+            alpha_bits: 0,
         }
     }
 }

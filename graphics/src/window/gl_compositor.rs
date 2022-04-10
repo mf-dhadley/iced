@@ -45,6 +45,15 @@ pub trait GLCompositor: Sized {
     /// an OpenGL context for this [`GLCompositor`].
     fn sample_count(settings: &Self::Settings) -> u32;
 
+    /// Returns the size of the depth buffer used when configuring the
+    /// OpenGL/Glutin context.
+    fn depth_buffer(settings: &Self::Settings) -> u8;
+
+    /// Returns a tuple containing the size (in bits) to use for red, green,
+    /// and blue color values as well as the amount of bits to use for alpha
+    /// values.
+    fn pixel_format(settings: &Self::Settings) -> (u8, u8);
+
     /// Resizes the viewport of the [`GLCompositor`].
     fn resize_viewport(&mut self, physical_size: Size<u32>);
 
