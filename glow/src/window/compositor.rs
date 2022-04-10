@@ -54,6 +54,14 @@ impl iced_graphics::window::GLCompositor for Compositor {
             .unwrap_or(0)
     }
 
+    fn depth_buffer(settings: &Settings) -> u8 {
+        settings.depth_bits
+    }
+
+    fn pixel_format(settings: &Settings) -> (u8, u8) {
+        (settings.color_bits, settings.alpha_bits)
+    }
+
     fn resize_viewport(&mut self, physical_size: Size<u32>) {
         unsafe {
             self.gl.viewport(
