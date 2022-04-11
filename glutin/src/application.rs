@@ -70,9 +70,6 @@ where
             .with_depth_buffer(C::depth_buffer(&compositor_settings))
             .with_pixel_format(color_format, alpha_format);
 
-        // .with_gl(rendering.gl)
-        // .with_vsync(rendering.vsync);
-
         let opengles_builder = opengl_builder.clone().with_gl(
             glutin::GlRequest::Specific(glutin::Api::OpenGlEs, (2, 0)),
         );
