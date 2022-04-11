@@ -100,6 +100,10 @@ where
         }
     };
 
+    if settings.window.visible_cursor != true {
+        context.window().set_cursor_visible(false);
+    }
+
     #[allow(unsafe_code)]
     let (compositor, renderer) = unsafe {
         C::new(compositor_settings, |address| {
