@@ -185,6 +185,11 @@ pub trait Application: Sized {
         false
     }
 
+    /// If the application has specific renderer configuration requirements such as the
+    /// framebuffer configuration attributes used by glutin, this method can be used to
+    /// mutate values before they are used.
+    fn configure_renderer(_settings: &mut crate::renderer::Settings) {}
+
     /// Runs the [`Application`].
     ///
     /// On native platforms, this method will take control of the current thread
@@ -198,7 +203,7 @@ pub trait Application: Sized {
     where
         Self: 'static,
     {
-        let renderer_settings = crate::renderer::Settings {
+        let mut renderer_settings = crate::renderer::Settings {
             default_font: settings.default_font,
             default_text_size: settings.default_text_size,
             text_multithreading: settings.text_multithreading,
@@ -209,6 +214,8 @@ pub trait Application: Sized {
             },
             ..crate::renderer::Settings::from_env()
         };
+
+        Self::configure_renderer(&mut renderer_settings);
 
         Ok(crate::runtime::application::run::<
             Instance<Self>,
