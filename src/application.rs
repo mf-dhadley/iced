@@ -185,10 +185,24 @@ pub trait Application: Sized {
         false
     }
 
-    /// If the application has specific renderer configuration requirements such as the
-    /// framebuffer configuration attributes used by glutin, this method can be used to
-    /// mutate values before they are used.
-    fn configure_renderer(_settings: &mut crate::renderer::Settings) {}
+    /// Runs the [`Application`], with the ability to provide additional renderer
+    /// configuration values. This is useful for applications that may need to
+    /// override the default frame buffer configuration attributes used by glutin.
+    ///
+    /// [`Error`]: crate::Error
+    fn run_with_renderer_settings(
+        settings: Settings<Self::Flags>,
+        renderer_settings: crate::renderer::Settings,
+    ) -> crate::Result
+    where
+        Self: 'static,
+    {
+        Ok(crate::runtime::application::run::<
+            Instance<Self>,
+            Self::Executor,
+            crate::renderer::window::Compositor,
+        >(settings.into(), renderer_settings)?)
+    }
 
     /// Runs the [`Application`].
     ///
@@ -203,7 +217,7 @@ pub trait Application: Sized {
     where
         Self: 'static,
     {
-        let mut renderer_settings = crate::renderer::Settings {
+        let renderer_settings = crate::renderer::Settings {
             default_font: settings.default_font,
             default_text_size: settings.default_text_size,
             text_multithreading: settings.text_multithreading,
@@ -215,13 +229,7 @@ pub trait Application: Sized {
             ..crate::renderer::Settings::from_env()
         };
 
-        Self::configure_renderer(&mut renderer_settings);
-
-        Ok(crate::runtime::application::run::<
-            Instance<Self>,
-            Self::Executor,
-            crate::renderer::window::Compositor,
-        >(settings.into(), renderer_settings)?)
+        Self::run_with_renderer_settings(settings, renderer_settings)
     }
 }
 
