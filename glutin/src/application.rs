@@ -130,10 +130,10 @@ where
 
     let mut context = task::Context::from_waker(task::noop_waker_ref());
 
-    event_loop.run_return(move |event, _, control_flow| {
+    let _ = event_loop.run_return(move |event, _, control_flow| {
         use glutin::event_loop::ControlFlow;
 
-        if let ControlFlow::Exit = control_flow {
+        if matches!(control_flow, &mut ControlFlow::Exit) {
             return;
         }
 

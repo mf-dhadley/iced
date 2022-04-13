@@ -14,9 +14,8 @@ categories = ["gui"]
 debug = ["iced_winit/debug"]
 
 [dependencies.glutin]
-version = "0.28"
-git = "https://github.com/iced-rs/glutin"
-rev = "7a0ee02782eb2bf059095e0c953c4bb53f1eef0e"
+git = "https://github.com/mf-dhadley/glutin"
+branch = "iced-head"
 
 [dependencies.iced_native]
 version = "0.4"
