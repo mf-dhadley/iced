@@ -189,12 +189,21 @@ pub fn fullscreen(
     monitor: Option<winit::monitor::MonitorHandle>,
     mode: Mode,
 ) -> Option<winit::window::Fullscreen> {
+    let counts = monitor
+        .as_ref()
+        .map(|mon| mon.video_modes().collect::<Vec<_>>().len());
+
     let exclusive = monitor
         .as_ref()
         .and_then(|mon| mon.video_modes().nth(0))
         .map(|vinfo| winit::window::Fullscreen::Exclusive(vinfo));
 
-    log::debug!("using exclusive fullscreen? {}", exclusive.is_some());
+    log::debug!(
+        "using exclusive fullscreen? {} (has monitor? {}) (count {:?})",
+        exclusive.is_some(),
+        monitor.is_some(),
+        counts
+    );
 
     match mode {
         Mode::Windowed | Mode::Hidden => None,
