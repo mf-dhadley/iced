@@ -177,10 +177,12 @@ impl<A: Application> State<A> {
         let new_mode = application.mode();
 
         if self.mode != new_mode {
-            window.set_fullscreen(conversion::fullscreen(
-                window.current_monitor(),
-                new_mode,
-            ));
+            let converted =
+                conversion::fullscreen(window.current_monitor(), new_mode);
+
+            log::debug!("updating fullscreen state - {converted:?}");
+
+            window.set_fullscreen(converted);
 
             window.set_visible(conversion::visible(new_mode));
 

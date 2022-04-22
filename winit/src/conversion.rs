@@ -189,10 +189,17 @@ pub fn fullscreen(
     monitor: Option<winit::monitor::MonitorHandle>,
     mode: Mode,
 ) -> Option<winit::window::Fullscreen> {
+    let exclusive = monitor
+        .as_ref()
+        .and_then(|mon| mon.video_modes().nth(0))
+        .map(|vinfo| winit::window::Fullscreen::Exclusive(vinfo));
+
+    log::debug!("using exclusive fullscreen? {}", exclusive.is_some());
+
     match mode {
         Mode::Windowed | Mode::Hidden => None,
         Mode::Fullscreen => {
-            Some(winit::window::Fullscreen::Borderless(monitor))
+            exclusive.or(Some(winit::window::Fullscreen::Borderless(monitor)))
         }
     }
 }
