@@ -70,6 +70,8 @@ where
     })
 }
 
+struct Tag<T>(T);
+
 struct Instance<'a, Message, Renderer, Event, S> {
     state: RefCell<Option<State<'a, Message, Renderer, Event, S>>>,
 }
@@ -130,7 +132,7 @@ where
     Renderer: iced_native::Renderer,
 {
     fn tag(&self) -> tree::Tag {
-        tree::Tag::of::<S>()
+        tree::Tag::of::<Tag<S>>()
     }
 
     fn state(&self) -> tree::State {
@@ -216,6 +218,10 @@ where
                 }
                 .build(),
             ));
+
+            self.with_element(|element| {
+                tree.diff_children(std::slice::from_ref(&element))
+            });
 
             shell.invalidate_layout();
         }
@@ -448,6 +454,10 @@ where
                 .build(),
             );
 
+            overlay.instance.with_element(|element| {
+                overlay.tree.diff_children(std::slice::from_ref(&element))
+            });
+
             self.overlay = Some(
                 OverlayBuilder {
                     instance: overlay.instance,
@@ -462,7 +472,7 @@ where
                             .as_ref()
                             .unwrap()
                             .as_widget()
-                            .overlay(tree, layout, renderer)
+                            .overlay(&mut tree.children[0], layout, renderer)
                     },
                 }
                 .build(),
