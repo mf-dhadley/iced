@@ -135,7 +135,7 @@ impl Window {
             use ::winit::platform::unix::WindowBuilderExtUnix;
 
             if let Some(id) = _id {
-                window_builder = window_builder.with_app_id(id);
+                window_builder = window_builder.with_name(&id, &id);
             }
         }
 
